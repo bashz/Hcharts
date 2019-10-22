@@ -1,28 +1,57 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <hc-chart :data="data" :process-data="processData" :scales="scales">
+      <hc-bars x="band" y="linear" orientation="horizontal"/>
+      <hc-axis direction="left" scale="band"/>
+    </hc-chart>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import HcChart from "./HcChart";
+import HcBars from "./components/HcBars";
+import HcAxis from "./components/scales/HcAxis"
 export default {
-  name: 'app',
+  name: "app",
   components: {
-    HelloWorld
+    HcChart,
+    HcBars,
+    HcAxis
+  },
+  data () {
+    return {
+      data: [{value: -89, name: 'alpha'}, {value : 45, name: 'beta'}, {value: 29, name: 'delta'}],
+      scales: {
+        band: {
+          type: 'band',
+          orientation: 'vertical'
+        },
+        linear: {
+          type: 'linear',
+          orientation: 'horizontal',
+          nice: 4
+        }
+      }
+    }
+  },
+  methods: {
+    processData(data) {
+      return data.map(d => {
+        d.value = Math.abs(d.value)
+        return d
+      })
+    }
+  },
+  mounted () {
+    setTimeout(() => {
+      this.data = [{value: 29, name: 'alpha'}, {value : 45, name: 'beta'}, {value: -29, name: 'delta'}]
+    }, 2000)
   }
-}
+};
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.hc-svg {
+  background-color: #c499ee;
 }
 </style>
