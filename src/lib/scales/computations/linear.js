@@ -10,8 +10,8 @@ const computeLinear = (config, data, width = 800, height = 600) => {
   } else {
     const values = data.map((d, index) => d[scale.discriminator] || index)
     scaleFunction = scaleFunction.domain([
-      scale.floor || Math.min(...values) - scale.marginMin,
-      scale.ceil || Math.max(...values) + scale.marginMax
+      scale.floor === 0 ? 0 : scale.floor || Math.min(...values) - scale.marginMin,
+      scale.ceil === 0 ? 0 : scale.ceil || Math.max(...values) + scale.marginMax
     ])
   }
   if (scale.range.length) {
@@ -26,6 +26,7 @@ const computeLinear = (config, data, width = 800, height = 600) => {
   if (scale.nice) {
     scaleFunction = scaleFunction.nice(scale.nice)
   }
+  scaleFunction.definition = scale
   return scaleFunction
 }
 

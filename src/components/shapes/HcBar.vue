@@ -16,9 +16,6 @@ export default {
       type: String,
       default: "#999999"
     }
-  },
-  mounted() {
-    console.log(this.value)
   }
 };
 </script>

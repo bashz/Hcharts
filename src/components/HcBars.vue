@@ -14,15 +14,7 @@ export default {
   inject: {
     chart: {
       type: Object,
-      default() {
-        return {
-          data: [],
-          animation: {},
-          scales: {},
-          width: 0,
-          height: 0
-        };
-      }
+      required: true
     }
   },
   props: {
@@ -33,10 +25,6 @@ export default {
     y: {
       type: String,
       required: true
-    },
-    orientation: {
-      type: String,
-      default: "vertical"
     }
   },
   data() {
@@ -62,25 +50,31 @@ export default {
       if (!this.X || !this.Y) {
         return [];
       }
-      return this.chart.data.map((d, index) => {
-        const y = this.Y(d.value);
-        const x = this.X(d.name || index);
-        return this.orientation === "vertical"
-          ? {
-              x: x,
-              y: y,
-              width: this.X.bandwidth(),
-              height: this.chart.height - y,
-              id: d.id || index
-            }
-          : {
-              x: 0,
-              y: x,
-              width: y,
-              height: this.X.bandwidth(),
-              id: d.id || index
-            };
-      });
+      if (this.X.bandwidth) {
+        return this.chart.data.map((d, index) => {
+          const y = this.Y(d[this.Y.definition.discriminator] || d.value);
+          const x = this.X(d[this.X.definition.discriminator] || d.name || index);
+          return {
+            x,
+            y,
+            width: this.X.bandwidth(),
+            height: this.chart.height - y,
+            id: d.id || index
+          };
+        });
+      } else {
+        return this.chart.data.map((d, index) => {
+          const x = this.X(d[this.X.definition.discriminator] || d.value);
+          const y = this.Y(d[this.Y.definition.discriminator] || d.name || index);
+          return {
+            x: 0,
+            y,
+            width: x,
+            height: this.Y.bandwidth(),
+            id: d.id || index
+          };
+        });
+      }
     }
   }
 };

@@ -1,46 +1,56 @@
 <template>
   <div class="hc-chart" :id="DomId">
-    <svg class="hc-svg" ref="chart" :style="style" :id="SvgId">
-      <slot />
+    <svg class="hc-svg" :style="style" :id="SvgId">
+      <g :transform="transform">
+        <slot />
+      </g>
     </svg>
   </div>
 </template>
 
 <script>
-import computeScales from './lib/scales'
-console.log(computeScales)
+import computeScales from "./lib/scales";
 export default {
   name: "HcChart",
   provide() {
-    const chart = {
-      data: [],
-      animation: {},
-      scales: {},
-      offsets: {top: 0, left: 0, bottom: 0, right: 0},
-      width: 0,
-      height: 0
-    };
-    Object.defineProperty(chart, "data", {
-      enumerable: true,
-      get: () => this.Data
+    Object.defineProperties(this.chart, {
+      data: {
+        enumerable: true,
+        get: () => this.data
+      },
+      animation: {
+        enumerable: true,
+        get: () => this.animation
+      },
+      scales: {
+        enumerable: true,
+        get: () =>
+          computeScales(
+            this.scales,
+            this.chart.data,
+            this.chart.width,
+            this.chart.height
+          )
+      },
+      offset: {
+        enumerable: true,
+        get: () => this.offset
+      },
+      width: {
+        get: () =>
+          (this.width || this.available.width || 960) -
+          this.chart.offset.left -
+          this.chart.offset.right
+      },
+      height: {
+        enumerable: true,
+        get: () =>
+          (this.height || this.available.height || 540) -
+          this.chart.offset.top -
+          this.chart.offset.bottom
+      }
     });
-    Object.defineProperty(chart, "animation", {
-      enumerable: true,
-      get: () => this.Animation
-    });
-    Object.defineProperty(chart, "scales", {
-      enumerable: true,
-      get: () => this.Scales
-    });
-    Object.defineProperty(chart, "width", {
-      enumerable: true,
-      get: () => this.Width
-    });
-    Object.defineProperty(chart, "height", {
-      enumerable: true,
-      get: () => this.Height
-    });
-    return { chart };
+    return { chart: this.chart };
   },
   props: {
     data: {
@@ -61,6 +71,12 @@ export default {
         return {};
       }
     },
+    offset: {
+      type: Object,
+      default() {
+        return { top: 0, left: 0, bottom: 0, right: 0 };
+      }
+    },
     width: {
       type: Number,
       default: 0
@@ -69,10 +85,6 @@ export default {
       type: Number,
       default: 0
     },
-    processData: {
-      type: Function,
-      default: data => data
-    },
     domId: {
       type: String,
       default: ""
@@ -80,11 +92,11 @@ export default {
   },
   data() {
     return {
-      Data: this.processData(this.data),
-      Animation: this.animation,
-      Width: Number(this.width) || 960,
-      Height: Number(this.height) || 540,
-      Scales: {},
+      chart: {},
+      available: {
+        width: 960,
+        height: 540
+      },
       DomId: `chart-${this.domId || this._uid}`,
       SvgId: `chart-svg-${this.domId || this._uid}`
     };
@@ -94,27 +106,22 @@ export default {
       this.resize();
       window.addEventListener("resize", this.resize);
     }
-    this.Scales = computeScales(this.scales, this.Data, this.Width, this.Height)
-  },
-  watch: {
-    data(newData) {
-      this.Data = this.processData(newData)
-    }
   },
   methods: {
     resize() {
-      if (!this.width) {
-        this.Width = this.$el.offsetWidth;
-      }
-      if (!this.height) {
-        this.Height = this.$el.offsetHeight - 4; // must cosider border and stuff
-      }
-      this.Scales = computeScales(this.scales, this.Data, this.Width, this.Height)
+      this.available.width = this.$el.offsetWidth;
+      this.available.height = this.$el.offsetHeight - 4; // must cosider border and stuff
     }
   },
   computed: {
     style() {
-      return { height: `${this.Height}px`, width: `${this.Width}px` };
+      return {
+        height: `${this.height || this.available.height}px`,
+        width: `${this.width || this.available.width}px`
+      };
+    },
+    transform() {
+      return `translate(${this.chart.offset.left}, ${this.chart.offset.top})`;
     }
   },
   beforeDestroy() {

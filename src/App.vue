@@ -1,8 +1,11 @@
 <template>
   <div id="app">
-    <hc-chart :data="data" :process-data="processData" :scales="scales">
-      <hc-bars x="band" y="linear" orientation="horizontal"/>
-      <hc-axis direction="left" scale="band"/>
+    <hc-chart :data="data" :scales="scales" :offset="offset">
+      <hc-bars x="band" y="linear" />
+      <hc-axis position="bottom" scale="band"/>
+      <hc-axis position="right" scale="linear"/>
+      <hc-axis position="left" scale="linear"/>
+      <hc-axis position="top" scale="band"/>
     </hc-chart>
   </div>
 </template>
@@ -24,28 +27,32 @@ export default {
       scales: {
         band: {
           type: 'band',
-          orientation: 'vertical'
+          orientation: 'horizontal'
         },
         linear: {
           type: 'linear',
-          orientation: 'horizontal',
+          orientation: 'vertical',
           nice: 4
         }
+      },
+      offset: {
+        left: 60,
+        bottom: 30,
+        right: 100,
+        top: 30
       }
-    }
-  },
-  methods: {
-    processData(data) {
-      return data.map(d => {
-        d.value = Math.abs(d.value)
-        return d
-      })
     }
   },
   mounted () {
     setTimeout(() => {
       this.data = [{value: 29, name: 'alpha'}, {value : 45, name: 'beta'}, {value: -29, name: 'delta'}]
     }, 2000)
+    setTimeout(() => {
+      this.data.push({value: 29, name: 'charlie'})
+    }, 4000)
+    setTimeout(() => {
+      this.data[0].value = 60
+    }, 6000)
   }
 };
 </script>

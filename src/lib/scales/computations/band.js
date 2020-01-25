@@ -28,6 +28,7 @@ const computeBand = (config, data, width = 800, height = 600) => {
   if (scale.align !== .5) {
     scaleFunction = scaleFunction.align(scale.align)
   }
+  scaleFunction.definition = scale
   return scaleFunction
 }
 

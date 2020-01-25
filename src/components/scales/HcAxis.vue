@@ -1,5 +1,5 @@
 <template>
-  <g class="hc-axis" text-anchor="middle" :transform="transform">
+  <g class="hc-axis" :text-anchor="textAnchor" :transform="transform">
     <path class="hc-axis-path" :d="drawPath(axis.path)"></path>
     <g
       v-for="(tick, index) in axis.ticks"
@@ -7,16 +7,12 @@
       class="hc-axis-tick"
       :transform="transformTick(tick.transform)"
     >
-      <line
-        class="hc-axis-tick-line"
-        :x2="tick.line.x2"
-        y2="-7"
-      />
+      <line class="hc-axis-tick-line" :x2="getTick(tick.line.x2)" :y2="getTick(tick.line.y2)" />
       <text
         class="hc-axis-tick-text"
         :x="tick.text.x"
         :y="tick.text.y"
-        :dy="tick.text.dy"
+        :dy="tick.text.dy + 'em'"
       >{{tick.text.text}}</text>
     </g>
   </g>
@@ -29,19 +25,11 @@ export default {
   inject: {
     chart: {
       type: Object,
-      default() {
-        return {
-          data: [],
-          animation: {},
-          scales: {},
-          width: 0,
-          height: 0
-        };
-      }
+      required: true
     }
   },
   props: {
-    direction: {
+    position: {
       type: String,
       default: "left"
     },
@@ -49,66 +37,52 @@ export default {
       type: String,
       required: true
     },
-    offset: {
-      type: Object,
-      default() {
-        return {
-          top: 30,
-          right: 370,
-          bottom: 370,
-          left: 30
-        };
-      }
+    tickLength: {
+      type: Number,
+      default: 1
     }
   },
   data() {
     return {
-      directions: {
+      positions: {
         top: 1,
         right: 2,
         bottom: 3,
         left: 4
-      }
+      },
+      textAnchors: ['middle', 'start', 'middle', 'end']
     };
   },
   methods: {
     transformTick(tick) {
       return `translate(${tick.x}, ${tick.y})`;
     },
+    getTick(tick) {
+      return tick * this.tickLength || 0
+    },
     drawPath(path) {
-      return (
-        "M" +
-        path.tick +
-        "," +
-        (path.range0 - this.offset.left + 18) +
-        "V" +
-        -path.tick +
-        "V-0.5H" +
-        (path.range1 + this.offset.right - 18) +
-        "V" +
-        path.tick +
-        "V" +
-        -path.tick
-      );
+      if (this.position === "top" || this.position === "bottom") {
+        return `M${path.range0},${path.tick}V${-path.tick}V-0.5H${path.range1}V${path.tick}V${-path.tick}`
+      }
+      return `M${-path.tick},${path.range0}H${path.tick}H-0.5V${path.range1}H${-path.tick},${path.tick}`
     }
   },
   computed: {
-    // Scale() {
-    //   return this.chart.scales[this.scale];
-    // },
     axis() {
       if (this.chart.scales[this.scale]) {
-        return axis(this.directions[this.direction] || 3, this.chart.scales[this.scale])();
+        return axis(
+          this.positions[this.position] || 3,
+          this.chart.scales[this.scale]
+        )();
       }
-      return {path: '', ticks: []}
-      // .ticks(this.chart.data.length)
-      // .tickFormat(d => d.name)();
+      return { path: "", ticks: [] };
+    },
+    textAnchor() {
+      return this.textAnchors[this.positions[this.position] - 1]
     },
     transform() {
-      const x =
-        this.direction === "right" ? this.offset.right : this.offset.left;
-      const y =
-        this.direction === "bottom" ? this.offset.bottom : this.offset.top;
+      const x = this.position === "right" ? this.chart.width : 0;
+      const y = this.position === "bottom" ? this.chart.height : 0;
       return `translate(${x}, ${y})`;
     }
   }
