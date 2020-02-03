@@ -37,6 +37,7 @@ export default {
         get: () => this.offset
       },
       width: {
+        enumerable: true,
         get: () =>
           (this.width || this.available.width || 960) -
           this.chart.offset.left -
@@ -62,7 +63,11 @@ export default {
     animation: {
       type: Object,
       default() {
-        return {};
+        return {
+          easing: "Linear",
+          duration: 1000,
+          delay: 0
+        };
       }
     },
     scales: {

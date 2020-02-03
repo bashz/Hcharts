@@ -7,7 +7,7 @@
 <script>
 import HcBar from "./shapes/HcBar";
 export default {
-  name: "Bars",
+  name: "HcBars",
   components: {
     HcBar
   },
@@ -30,7 +30,8 @@ export default {
   data() {
     return {
       X: this.chart.scales[this.x],
-      Y: this.chart.scales[this.y]
+      Y: this.chart.scales[this.y],
+      color: "#999"
     };
   },
   watch: {
@@ -59,7 +60,8 @@ export default {
             y,
             width: this.X.bandwidth(),
             height: this.chart.height - y,
-            id: d.id || index
+            id: d.id || index,
+            color: this.color
           };
         });
       } else {
@@ -71,7 +73,8 @@ export default {
             y,
             width: x,
             height: this.Y.bandwidth(),
-            id: d.id || index
+            id: d.id || index,
+            color: this.color
           };
         });
       }

@@ -13,13 +13,14 @@
         :x="tick.text.x"
         :y="tick.text.y"
         :dy="tick.text.dy + 'em'"
-      >{{tick.text.text}}</text>
+      >{{tick.text.text.replace(/(\.\d{1}).*$/, (a, c) => c)}}</text>
     </g>
   </g>
 </template>
 
 <script>
 import { axis } from "d3-axis-norender";
+import animation from "./../../lib/animation";
 export default {
   name: "HcAxis",
   inject: {
@@ -44,13 +45,20 @@ export default {
   },
   data() {
     return {
+      axis: {
+        path: "",
+        ticks: [],
+        x: 0,
+        y: 0
+      },
       positions: {
         top: 1,
         right: 2,
         bottom: 3,
         left: 4
       },
-      textAnchors: ['middle', 'start', 'middle', 'end']
+      textAnchors: ["middle", "start", "middle", "end"],
+      cancelAnimation: null
     };
   },
   methods: {
@@ -58,32 +66,91 @@ export default {
       return `translate(${tick.x}, ${tick.y})`;
     },
     getTick(tick) {
-      return tick * this.tickLength || 0
+      return tick * this.tickLength || 0;
     },
     drawPath(path) {
       if (this.position === "top" || this.position === "bottom") {
-        return `M${path.range0},${path.tick}V${-path.tick}V-0.5H${path.range1}V${path.tick}V${-path.tick}`
+        return `M${path.range0},${path.tick}V${-path.tick}V-0.5H${
+          path.range1
+        }V${path.tick}V${-path.tick}`;
       }
-      return `M${-path.tick},${path.range0}H${path.tick}H-0.5V${path.range1}H${-path.tick},${path.tick}`
+      return `M${-path.tick},${path.range0}H${path.tick}H-0.5V${
+        path.range1
+      }H${-path.tick},${path.tick}`;
     }
   },
-  computed: {
-    axis() {
+  mounted() {
+    this.$nextTick(() => {
       if (this.chart.scales[this.scale]) {
-        return axis(
+        const ax = axis(
           this.positions[this.position] || 3,
           this.chart.scales[this.scale]
         )();
+        ax.x = (this.position === "right" && this.chart.width) || 0;
+        ax.y = (this.position === "bottom" && this.chart.height) || 0;
+        this.axis = ax;
       }
-      return { path: "", ticks: [] };
+    });
+  },
+  watch: {
+    "chart.scales"() {
+      if (this.chart.scales[this.scale]) {
+        this.cancelAnimation && this.cancelAnimation();
+        const ax = axis(
+          this.positions[this.position] || 3,
+          this.chart.scales[this.scale]
+        )();
+        ax.x = (this.position === "right" && this.chart.width) || 0;
+        ax.y = (this.position === "bottom" && this.chart.height) || 0;
+        this.cancelAnimation = animation(
+          this.axis,
+          ax,
+          this.chart.animation,
+          v => (this.axis = v)
+        );
+      }
     },
+    scales() {
+      if (this.chart.scales[this.scale]) {
+        this.cancelAnimation && this.cancelAnimation();
+        const ax = axis(
+          this.positions[this.position] || 3,
+          this.chart.scales[this.scale]
+        )();
+        ax.x = (this.position === "right" && this.chart.width) || 0;
+        ax.y = (this.position === "bottom" && this.chart.height) || 0;
+        this.cancelAnimation = animation(
+          this.axis,
+          ax,
+          this.chart.animation,
+          v => (this.axis = v)
+        );
+      }
+    },
+    position() {
+      if (this.chart.scales[this.scale] && this.cancelAnimation) {
+        this.cancelAnimation && this.cancelAnimation();
+        const ax = axis(
+          this.positions[this.position] || 3,
+          this.chart.scales[this.scale]
+        )();
+        ax.x = (this.position === "right" && this.chart.width) || 0;
+        ax.y = (this.position === "bottom" && this.chart.height) || 0;
+        this.cancelAnimation = animation(
+          this.axis,
+          ax,
+          this.chart.animation,
+          v => (this.axis = v)
+        );
+      }
+    }
+  },
+  computed: {
     textAnchor() {
-      return this.textAnchors[this.positions[this.position] - 1]
+      return this.textAnchors[this.positions[this.position] - 1];
     },
     transform() {
-      const x = this.position === "right" ? this.chart.width : 0;
-      const y = this.position === "bottom" ? this.chart.height : 0;
-      return `translate(${x}, ${y})`;
+      return `translate(${this.axis.x}, ${this.axis.y})`;
     }
   }
 };
