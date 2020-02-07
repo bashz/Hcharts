@@ -10,13 +10,15 @@
 
 <script>
 import computeScales from "./lib/scales";
+
 export default {
   name: "HcChart",
   provide() {
     Object.defineProperties(this.chart, {
       data: {
         enumerable: true,
-        get: () => this.data
+        get: () => this.Data,
+        set: (data) => { this.Data = this.pipeline(data) }
       },
       animation: {
         enumerable: true,
@@ -35,6 +37,10 @@ export default {
       offset: {
         enumerable: true,
         get: () => this.offset
+      },
+      colors: {
+        enumerable: true,
+        get: () => this.colors
       },
       width: {
         enumerable: true,
@@ -82,6 +88,12 @@ export default {
         return { top: 0, left: 0, bottom: 0, right: 0 };
       }
     },
+    colors: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     width: {
       type: Number,
       default: 0
@@ -98,6 +110,7 @@ export default {
   data() {
     return {
       chart: {},
+      Data: [],
       available: {
         width: 960,
         height: 540
@@ -107,15 +120,31 @@ export default {
     };
   },
   mounted() {
+    this.chart.data = this.data
     if (!this.width || !this.height) {
       this.resize();
       window.addEventListener("resize", this.resize);
+    }
+  },
+  watch: {
+    data(newData) {
+      this.chart.data = newData
+    },
+    colors() {
+      this.Data = this.pipeline(this.data, true)
     }
   },
   methods: {
     resize() {
       this.available.width = this.$el.offsetWidth;
       this.available.height = this.$el.offsetHeight - 4; // must cosider border and stuff
+    },
+    pipeline(data, force = false) {
+      return data.map((d, index) => {
+        d.color = (!force && d.color) || this.chart.colors.length && this.chart.colors[index % this.chart.colors.length]
+        d.id = d.id || index.toString(2)
+        return d
+      })
     }
   },
   computed: {

@@ -30,8 +30,7 @@ export default {
   data() {
     return {
       X: this.chart.scales[this.x],
-      Y: this.chart.scales[this.y],
-      color: "#999"
+      Y: this.chart.scales[this.y]
     };
   },
   watch: {
@@ -52,29 +51,29 @@ export default {
         return [];
       }
       if (this.X.bandwidth) {
-        return this.chart.data.map((d, index) => {
+        return this.chart.data.map(d => {
           const y = this.Y(d[this.Y.definition.discriminator] || d.value);
-          const x = this.X(d[this.X.definition.discriminator] || d.name || index);
+          const x = this.X(d[this.X.definition.discriminator] || d.name || d.id);
           return {
             x,
             y,
             width: this.X.bandwidth(),
             height: this.chart.height - y,
-            id: d.id || index,
-            color: this.color
+            id: d.id,
+            color: d.color
           };
         });
       } else {
-        return this.chart.data.map((d, index) => {
+        return this.chart.data.map(d => {
           const x = this.X(d[this.X.definition.discriminator] || d.value);
-          const y = this.Y(d[this.Y.definition.discriminator] || d.name || index);
+          const y = this.Y(d[this.Y.definition.discriminator] || d.name || d.id);
           return {
             x: 0,
             y,
             width: x,
             height: this.Y.bandwidth(),
-            id: d.id || index,
-            color: this.color
+            id: d.id,
+            color: d.color
           };
         });
       }

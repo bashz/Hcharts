@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <hc-chart :data="data" :scales="scales" :offset="offset" :height="400" :animation="animation">
+    <hc-chart :data="data" :scales="scales" :offset="offset" :height="800" :colors="colors" :animation="animation">
       <hc-bars x="band" y="linear" />
       <hc-axis position="bottom" scale="band" />
       <hc-axis position="right" scale="linear" />
@@ -46,6 +46,9 @@ export default {
         right: 100,
         top: 30
       },
+      colors: [
+        "#339999", "#993399", "#333399"
+      ],
       animation: {
         easing: "Bounce",
         duration: 1000
@@ -82,6 +85,6 @@ export default {
 
 <style>
 .hc-svg {
-  background-color: #c499ee;
+  background-color: #dfe5f0;
 }
 </style>
