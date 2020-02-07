@@ -7,6 +7,7 @@
       <hc-axis :position="position" scale="linear" />
       <!-- <hc-axis position="top" scale="band"/> -->
     </hc-chart>
+    <hc-tooltip/>
   </div>
 </template>
 
@@ -14,12 +15,14 @@
 import HcChart from "./HcChart";
 import HcBars from "./components/HcBars";
 import HcAxis from "./components/scales/HcAxis";
+import HcTooltip from "./components/tools/HcTooltip";
 export default {
   name: "app",
   components: {
     HcChart,
     HcBars,
-    HcAxis
+    HcAxis,
+    HcTooltip
   },
   data() {
     return {

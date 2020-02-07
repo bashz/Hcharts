@@ -52,28 +52,36 @@ export default {
       }
       if (this.X.bandwidth) {
         return this.chart.data.map(d => {
-          const y = this.Y(d[this.Y.definition.discriminator] || d.value);
-          const x = this.X(d[this.X.definition.discriminator] || d.name || d.id);
+          const value = d[this.Y.definition.discriminator] || d.value
+          const label = d[this.X.definition.discriminator] || d.name || d.id
+          const y = this.Y(value);
+          const x = this.X(label);
           return {
             x,
             y,
             width: this.X.bandwidth(),
             height: this.chart.height - y,
+            color: d.color,
             id: d.id,
-            color: d.color
+            label,
+            value
           };
         });
       } else {
         return this.chart.data.map(d => {
-          const x = this.X(d[this.X.definition.discriminator] || d.value);
-          const y = this.Y(d[this.Y.definition.discriminator] || d.name || d.id);
+          const value = d[this.Y.definition.discriminator] || d.value
+          const label = d[this.X.definition.discriminator] || d.name || d.id
+          const x = this.X(value);
+          const y = this.Y(label);
           return {
             x: 0,
             y,
             width: x,
             height: this.Y.bandwidth(),
+            color: d.color,
             id: d.id,
-            color: d.color
+            label,
+            value
           };
         });
       }

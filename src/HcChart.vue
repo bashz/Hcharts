@@ -10,7 +10,7 @@
 
 <script>
 import computeScales from "./lib/scales";
-
+import bus from "./lib/bus"
 export default {
   name: "HcChart",
   provide() {
@@ -55,6 +55,10 @@ export default {
           (this.height || this.available.height || 540) -
           this.chart.offset.top -
           this.chart.offset.bottom
+      },
+      tooltip: {
+        enumerable: true,
+        set: (tooltip) => { tooltip && bus.$emit('tooltip-show', tooltip) || bus.$emit('tooltip-hide')}
       }
     });
     return { chart: this.chart };
@@ -111,6 +115,7 @@ export default {
     return {
       chart: {},
       Data: [],
+      tooltip: null,
       available: {
         width: 960,
         height: 540
@@ -141,8 +146,8 @@ export default {
     },
     pipeline(data, force = false) {
       return data.map((d, index) => {
-        d.color = (!force && d.color) || this.chart.colors.length && this.chart.colors[index % this.chart.colors.length]
-        d.id = d.id || index.toString(2)
+        d.color = (!force && d.color) || this.chart.colors.length && this.chart.colors[index % this.chart.colors.length] || "#1f77b4"
+        d.id = d.id || index.toString()
         return d
       })
     }
