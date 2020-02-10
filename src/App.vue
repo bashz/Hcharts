@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <hc-chart :data="data" :scales="scales" :offset="offset" :height="800" :colors="colors" :animation="animation">
+    <hc-chart :data="data" :scales="scales" :offset="offset" :height="400" :colors="colors" :animation="animation">
       <hc-bars x="band" y="linear" />
       <hc-axis position="bottom" scale="band" />
       <hc-axis position="right" scale="linear" />

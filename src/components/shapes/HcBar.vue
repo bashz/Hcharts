@@ -11,9 +11,11 @@
 </template>
 
 <script>
-import animation from "./../../lib/animation";
+import animation from "../../lib/animation";
+import chartOverwrites from "../../lib/mixins/chartOverwrites"
 export default {
   name: "HcBar",
+  mixins: [chartOverwrites],
   inject: {
     chart: {
       type: Object,
@@ -28,6 +30,9 @@ export default {
       }
     }
   },
+  isLeaf: true,
+  canOverwrite: false,
+  hasTooltip: true,
   data() {
     return {
       animated: {
@@ -43,22 +48,13 @@ export default {
     };
   },
   methods: {
-    tooltipOn(event) {
-      this.chart.tooltip = {
-        x: event.clientX,
-        y: event.clientY,
-        content: `${this.animated.label}: <b>${this.animated.value}</b>`
-      }
-    },
-    tooltipOff() {
-      this.chart.tooltip = null
-    }
+
   },
   mounted() {
     this.cancelAnimation = animation(
       this.animated,
       this.value,
-      this.chart.animation,
+      this.animation,
       v => (this.animated = v)
     );
   },
@@ -68,7 +64,7 @@ export default {
       this.cancelAnimation = animation(
         this.animated,
         newVal,
-        this.chart.animation,
+        this.animation,
         v => (this.animated = v)
       );
     }
