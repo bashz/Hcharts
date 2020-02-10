@@ -11,11 +11,12 @@
 </template>
 
 <script>
+import mixins from "../../lib/mixins"
 import animation from "../../lib/animation";
-import chartOverwrites from "../../lib/mixins/chartOverwrites"
+
 export default {
   name: "HcBar",
-  mixins: [chartOverwrites],
+  mixins: [mixins],
   inject: {
     chart: {
       type: Object,
@@ -46,9 +47,6 @@ export default {
       },
       cancelAnimation: null
     };
-  },
-  methods: {
-
   },
   mounted() {
     this.cancelAnimation = animation(
