@@ -6,7 +6,7 @@
       </g>
     </svg>
     <slot name="HcFilter">
-      <hc-dummy-filter/>
+      <hc-dummy-filter />
     </slot>
     <slot name="HcLegend"></slot>
     <slot name="HcTooltip"></slot>
@@ -15,7 +15,7 @@
 
 <script>
 import computeScales from "./lib/scales";
-import HcDummyFilter from "./components/addons/dummy/HcDummyFilter"
+import HcDummyFilter from "./components/addons/dummy/HcDummyFilter";
 export default {
   name: "HcChart",
   components: {
@@ -26,15 +26,15 @@ export default {
       unfiltredData: {
         enumerable: true,
         get: () => this.unfiltredData,
-        set: (data) => {
-          this.unfiltredData = this.pipeline(data)
+        set: data => {
+          this.unfiltredData = this.pipeline(data);
         }
       },
       data: {
         enumerable: true,
         get: () => this.Data,
-        set: (data) => {
-          this.Data = data
+        set: data => {
+          this.Data = data;
         }
       },
       animation: {
@@ -76,7 +76,9 @@ export default {
       tooltip: {
         enumerable: true,
         get: () => this.tooltip,
-        set: (tooltip) => { this.tooltip = tooltip }
+        set: tooltip => {
+          this.tooltip = tooltip;
+        }
       }
     });
     return { chart: this.chart };
@@ -144,7 +146,7 @@ export default {
     };
   },
   created() {
-    this.chart.unfiltredData = this.pipeline(this.data)
+    this.chart.unfiltredData = this.pipeline(this.data);
   },
   mounted() {
     if (!this.width || !this.height) {
@@ -154,10 +156,10 @@ export default {
   },
   watch: {
     data(newData) {
-      this.chart.unfiltredData = newData
+      this.chart.unfiltredData = newData;
     },
     colors() {
-      this.unfiltredData = this.pipeline(this.data, true)
+      this.unfiltredData = this.pipeline(this.data, true);
     }
   },
   methods: {
@@ -167,10 +169,14 @@ export default {
     },
     pipeline(data, force = false) {
       return data.map((d, index) => {
-        d.color = (!force && d.color) || this.chart.colors.length && this.chart.colors[index % this.chart.colors.length] || "#1f77b4"
-        d.id = d.id || index.toString()
-        return d
-      })
+        d.color =
+          (!force && d.color) ||
+          (this.chart.colors.length &&
+            this.chart.colors[index % this.chart.colors.length]) ||
+          "#1f77b4";
+        d.id = d.id || index.toString();
+        return d;
+      });
     }
   },
   computed: {

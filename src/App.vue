@@ -1,19 +1,26 @@
 <template>
   <div id="app">
-    <hc-chart :data="data" :scales="scales" :offset="offset" :height="300" :colors="colors" :animation="animation">
+    <hc-chart
+      :data="data"
+      :scales="scales"
+      :offset="offset"
+      :height="300"
+      :colors="colors"
+      :animation="animation"
+    >
       <hc-bars x="band" y="linear" />
       <hc-axis position="bottom" scale="band" />
       <hc-axis position="right" scale="linear" />
       <hc-axis :position="position" scale="linear" />
       <!-- <hc-axis position="top" scale="band"/> -->
       <template v-slot:HcFilter>
-        <hc-filter/>
+        <hc-filter />
       </template>
       <template v-slot:HcLegend>
-        <hc-legend/>
+        <hc-legend />
       </template>
       <template v-slot:HcTooltip>
-        <hc-tooltip/>
+        <hc-tooltip />
       </template>
     </hc-chart>
   </div>
@@ -61,9 +68,7 @@ export default {
         right: 100,
         top: 30
       },
-      colors: [
-        "#339999", "#993399", "#333399"
-      ],
+      colors: ["#339999", "#993399", "#333399"],
       animation: {
         easing: "Bounce",
         duration: 1000

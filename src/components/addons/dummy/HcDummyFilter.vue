@@ -12,11 +12,11 @@ export default {
     }
   },
   created() {
-    this.chart.data = this.chart.unfiltredData
+    this.chart.data = this.chart.unfiltredData;
   },
   watch: {
-    "chart.unfiltredData" (newData) {
-      this.chart.data = newData
+    "chart.unfiltredData"(newData) {
+      this.chart.data = newData;
     }
   }
 };

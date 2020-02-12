@@ -52,8 +52,8 @@ export default {
       }
       if (this.X.bandwidth) {
         return this.chart.data.map(d => {
-          const value = d[this.Y.definition.discriminator] || d.value
-          const label = d[this.X.definition.discriminator] || d.name || d.id
+          const value = d[this.Y.definition.discriminator] || d.value;
+          const label = d[this.X.definition.discriminator] || d.name || d.id;
           const y = this.Y(value);
           const x = this.X(label);
           return {
@@ -69,8 +69,8 @@ export default {
         });
       } else {
         return this.chart.data.map(d => {
-          const value = d[this.Y.definition.discriminator] || d.value
-          const label = d[this.X.definition.discriminator] || d.name || d.id
+          const value = d[this.Y.definition.discriminator] || d.value;
+          const label = d[this.X.definition.discriminator] || d.name || d.id;
           const x = this.X(value);
           const y = this.Y(label);
           return {

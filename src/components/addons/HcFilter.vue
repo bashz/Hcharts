@@ -1,11 +1,6 @@
 <template>
   <div class="hc-filter">
-    <div 
-      v-for="(d, i) in data"
-      :key="d.id"
-      class="hc-filter-key"
-      @click="toggle(d, i)"
-    >
+    <div v-for="(d, i) in data" :key="d.id" class="hc-filter-key" @click="toggle(d, i)">
       <div
         class="hc-filter-box"
         :style="{
@@ -13,7 +8,7 @@
           'border': d.color + ' 2px solid'  
         }"
       ></div>
-      <span class="hc-filter-text"> {{d.name}}</span>
+      <span class="hc-filter-text">{{d.name}}</span>
     </div>
   </div>
 </template>
@@ -35,31 +30,31 @@ export default {
   },
   created() {
     this.data = this.chart.unfiltredData.map(d => {
-      d.isActive = true
-      return d
-    })
+      d.isActive = true;
+      return d;
+    });
     this.dataIds = this.data.map(d => d.id);
-    this.setData()
+    this.setData();
   },
   watch: {
-    "chart.unfiltredData" (newData) {
+    "chart.unfiltredData"(newData) {
       this.data = newData.map(d => {
         const index = this.dataIds.indexOf(d.id);
-        d.isActive = ~index ? this.data[index].isActive : true
+        d.isActive = ~index ? this.data[index].isActive : true;
         return d;
       });
       this.dataIds = this.data.map(d => d.id);
-      this.setData()
+      this.setData();
     }
   },
   methods: {
     toggle(d, i) {
-      d.isActive = !d.isActive
+      d.isActive = !d.isActive;
       this.$set(this.data, i, d);
-      this.setData()
+      this.setData();
     },
     setData() {
-      this.chart.data = this.data.filter(d => d.isActive)
+      this.chart.data = this.data.filter(d => d.isActive);
     }
   }
 };

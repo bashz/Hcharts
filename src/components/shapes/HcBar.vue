@@ -24,7 +24,15 @@ export default {
     value: {
       type: Object,
       default() {
-        return { x: 0, y: 0, width: 0, height: 0, color: "#1f77b4", label: '', value: 0 };
+        return {
+          x: 0,
+          y: 0,
+          width: 0,
+          height: 0,
+          color: "#1f77b4",
+          label: "",
+          value: 0
+        };
       }
     }
   },
@@ -36,7 +44,7 @@ export default {
         width: 0,
         height: 0,
         color: "#1f77b4",
-        label: '',
+        label: "",
         value: 0
       },
       cancelAnimation: null
@@ -48,10 +56,10 @@ export default {
         x: event.clientX,
         y: event.clientY,
         content: `${this.animated.label}: <b>${this.animated.value}</b>`
-      }
+      };
     },
     tooltipOff() {
-      this.chart.tooltip = null
+      this.chart.tooltip = null;
     }
   },
   mounted() {

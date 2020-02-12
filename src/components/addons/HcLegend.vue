@@ -1,11 +1,8 @@
 <template>
   <div class="hc-legend">
     <div v-for="d in chart.data" :key="d.id" class="hc-legend-key">
-      <div
-        class="hc-legend-box"
-        :style="{'background-color': d.color}"
-      ></div>
-      <span class="hc-legend-text"> {{d.name}}</span>
+      <div class="hc-legend-box" :style="{'background-color': d.color}"></div>
+      <span class="hc-legend-text">{{d.name}}</span>
     </div>
   </div>
 </template>
