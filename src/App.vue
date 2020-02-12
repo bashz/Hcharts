@@ -9,6 +9,9 @@
       <template v-slot:HcFilter>
         <hc-filter/>
       </template>
+      <template v-slot:HcLegend>
+        <hc-legend/>
+      </template>
       <template v-slot:HcTooltip>
         <hc-tooltip/>
       </template>
@@ -20,16 +23,18 @@
 import HcChart from "./HcChart";
 import HcBars from "./components/HcBars";
 import HcAxis from "./components/scales/HcAxis";
-import HcTooltip from "./components/addons/HcTooltip";
 import HcFilter from "./components/addons/HcFilter";
+import HcLegend from "./components/addons/HcLegend";
+import HcTooltip from "./components/addons/HcTooltip";
 export default {
   name: "app",
   components: {
     HcChart,
     HcBars,
     HcAxis,
-    HcTooltip,
-    HcFilter
+    HcFilter,
+    HcLegend,
+    HcTooltip
   },
   data() {
     return {
