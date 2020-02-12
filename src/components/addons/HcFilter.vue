@@ -8,7 +8,7 @@
           'border': d.color + ' 2px solid'  
         }"
       ></div>
-      <span class="hc-filter-text">{{d.name}}</span>
+      <span class="hc-filter-text"> {{d.name}}</span>
     </div>
   </div>
 </template>

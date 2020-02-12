@@ -4,7 +4,6 @@
       :data="data"
       :scales="scales"
       :offset="offset"
-      :height="300"
       :colors="colors"
       :animation="animation"
     >

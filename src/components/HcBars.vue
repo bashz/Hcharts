@@ -69,8 +69,8 @@ export default {
         });
       } else {
         return this.chart.data.map(d => {
-          const value = d[this.Y.definition.discriminator] || d.value;
-          const label = d[this.X.definition.discriminator] || d.name || d.id;
+          const value = d[this.X.definition.discriminator] || d.value;
+          const label = d[this.Y.definition.discriminator] || d.name || d.id;
           const x = this.X(value);
           const y = this.Y(label);
           return {

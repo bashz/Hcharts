@@ -1,10 +1,12 @@
 <template>
-  <div class="hc-chart" :id="DomId">
-    <svg class="hc-svg" :style="style" :id="SvgId">
-      <g :transform="transform">
-        <slot />
-      </g>
-    </svg>
+  <div class="hc-viz" :id="DomId">
+    <div class="hc-chart" ref="chart">
+      <svg class="hc-svg" :style="style" :id="SvgId">
+        <g :transform="transform">
+          <slot />
+        </g>
+      </svg>
+    </div>
     <slot name="HcFilter">
       <hc-dummy-filter />
     </slot>
@@ -142,7 +144,8 @@ export default {
         height: 540
       },
       DomId: `chart-${this.domId || this._uid}`,
-      SvgId: `chart-svg-${this.domId || this._uid}`
+      SvgId: `chart-svg-${this.domId || this._uid}`,
+      resizeThrottle: -1
     };
   },
   created() {
@@ -163,9 +166,19 @@ export default {
     }
   },
   methods: {
-    resize() {
-      this.available.width = this.$el.offsetWidth;
-      this.available.height = this.$el.offsetHeight - 4; // must cosider border and stuff
+    resize(event) {
+      if (!event) {
+        // (fired programatically) immidiate resize
+        this.available.width = parseInt(getComputedStyle(this.$refs.chart).width);
+        this.available.height = parseInt(getComputedStyle(this.$refs.chart).height) - 4;
+      } else {
+        // (fired by user) throttled resize
+        clearTimeout(this.resizeThrottle);
+        this.resizeThrottle = setTimeout(() => {
+          this.available.width = parseInt(getComputedStyle(this.$refs.chart).width);
+          this.available.height = parseInt(getComputedStyle(this.$refs.chart).height) - 4;
+        }, 100);
+      }
     },
     pipeline(data, force = false) {
       return data.map((d, index) => {
