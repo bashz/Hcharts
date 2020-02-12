@@ -13,29 +13,36 @@
           'border': d.color + ' 2px solid'  
         }"
       ></div>
-      <span>{{d.name}}</span>
+      <span> {{d.name}}</span>
     </div>
   </div>
 </template>
 
 <script>
-import bus from "../../lib/bus";
 export default {
   name: "HcFilter",
+  inject: {
+    chart: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       data: [],
       dataIds: []
     };
   },
-  methods: {
-    toggle(d, i) {
-      d.isActive = !d.isActive
-      this.$set(this.data, i, d);
-      this.sendData()
-    },
-    updateData(data) {
-      this.data = data.map(d => {
+  created() {
+    this.data = this.chart.unfiltredData.map(d => {
+      d.isActive = true
+      return d
+    })
+    this.setData()
+  },
+  watch: {
+    "chart.unfiltredData" (newData) {
+      this.data = newData.map(d => {
         const index = this.dataIds.indexOf(d.id);
         if (~index) {
           return this.data[index];
@@ -44,20 +51,18 @@ export default {
         return d;
       });
       this.dataIds = this.data.map(d => d.id);
-      this.sendData()
-    },
-    sendData() {
-      bus.$emit(
-        "filtered-data",
-        this.data.filter(d => d.isActive)
-      );
+      this.setData()
     }
   },
-  created() {
-    bus.$on("original-data", this.updateData);
-  },
-  destroyed() {
-    bus.$off("original-data", this.updateData);
+  methods: {
+    toggle(d, i) {
+      d.isActive = !d.isActive
+      this.$set(this.data, i, d);
+      this.setData()
+    },
+    setData() {
+      this.chart.data = this.data.filter(d => d.isActive)
+    }
   }
 };
 </script>

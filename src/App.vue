@@ -6,9 +6,11 @@
       <hc-axis position="right" scale="linear" />
       <hc-axis :position="position" scale="linear" />
       <!-- <hc-axis position="top" scale="band"/> -->
+      <template v-slot:HcFilter>
+        <hc-filter/>
+      </template>
     </hc-chart>
     <hc-tooltip/>
-    <hc-filter/>
   </div>
 </template>
 

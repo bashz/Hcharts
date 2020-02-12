@@ -79,7 +79,7 @@ export default {
       }H${-path.tick},${path.tick}`;
     }
   },
-  mounted() {
+  created() {
     this.$nextTick(() => {
       if (this.chart.scales[this.scale]) {
         const ax = axis(

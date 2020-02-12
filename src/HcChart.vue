@@ -5,21 +5,37 @@
         <slot />
       </g>
     </svg>
+    <slot name="HcFilter">
+      <hc-dummy-filter/>
+    </slot>
+    <slot name="HcLegend"></slot>
+    <slot name="HcTooltip"></slot>
   </div>
 </template>
 
 <script>
 import computeScales from "./lib/scales";
+import HcDummyFilter from "./components/addons/dummy/HcDummyFilter"
 import bus from "./lib/bus"
 export default {
   name: "HcChart",
+  components: {
+    HcDummyFilter
+  },
   provide() {
     Object.defineProperties(this.chart, {
+      unfiltredData: {
+        enumerable: true,
+        get: () => this.unfiltredData,
+        set: (data) => {
+          this.unfiltredData = this.pipeline(data)
+        }
+      },
       data: {
         enumerable: true,
         get: () => this.Data,
         set: (data) => {
-          bus.$emit('original-data', this.pipeline(data))
+          this.Data = data
         }
       },
       animation: {
@@ -116,6 +132,7 @@ export default {
   data() {
     return {
       chart: {},
+      unfiltredData: [],
       Data: [],
       tooltip: null,
       available: {
@@ -126,8 +143,11 @@ export default {
       SvgId: `chart-svg-${this.domId || this._uid}`
     };
   },
+  created() {
+    this.chart.data = this.pipeline(this.data)
+    this.chart.unfiltredData = this.pipeline(this.data)
+  },
   mounted() {
-    this.chart.data = this.data
     if (!this.width || !this.height) {
       this.resize();
       window.addEventListener("resize", this.resize);
@@ -135,10 +155,10 @@ export default {
   },
   watch: {
     data(newData) {
-      this.chart.data = newData
+      this.chart.unfiltredData = newData
     },
     colors() {
-      bus.$emit('original-data', this.pipeline(this.data, true))
+      this.unfiltredData = this.pipeline(this.data, true)
     }
   },
   methods: {
@@ -152,9 +172,6 @@ export default {
         d.id = d.id || index.toString()
         return d
       })
-    },
-    setData(data) {
-      this.Data = data
     }
   },
   computed: {
@@ -167,12 +184,6 @@ export default {
     transform() {
       return `translate(${this.chart.offset.left}, ${this.chart.offset.top})`;
     }
-  },
-  created() {
-    bus.$on("filtered-data", this.setData);
-  },
-  destroyed() {
-    bus.$off("filtered-data", this.setData);
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.resize);
