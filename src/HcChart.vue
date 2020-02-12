@@ -18,7 +18,9 @@ export default {
       data: {
         enumerable: true,
         get: () => this.Data,
-        set: (data) => { this.Data = this.pipeline(data) }
+        set: (data) => {
+          bus.$emit('original-data', this.pipeline(data))
+        }
       },
       animation: {
         enumerable: true,
@@ -136,7 +138,7 @@ export default {
       this.chart.data = newData
     },
     colors() {
-      this.Data = this.pipeline(this.data, true)
+      bus.$emit('original-data', this.pipeline(this.data, true))
     }
   },
   methods: {
@@ -150,6 +152,9 @@ export default {
         d.id = d.id || index.toString()
         return d
       })
+    },
+    setData(data) {
+      this.Data = data
     }
   },
   computed: {
@@ -162,6 +167,12 @@ export default {
     transform() {
       return `translate(${this.chart.offset.left}, ${this.chart.offset.top})`;
     }
+  },
+  created() {
+    bus.$on("filtered-data", this.setData);
+  },
+  destroyed() {
+    bus.$off("filtered-data", this.setData);
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.resize);

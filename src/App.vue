@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <hc-chart :data="data" :scales="scales" :offset="offset" :height="800" :colors="colors" :animation="animation">
+    <hc-chart :data="data" :scales="scales" :offset="offset" :height="300" :colors="colors" :animation="animation">
       <hc-bars x="band" y="linear" />
       <hc-axis position="bottom" scale="band" />
       <hc-axis position="right" scale="linear" />
@@ -8,6 +8,7 @@
       <!-- <hc-axis position="top" scale="band"/> -->
     </hc-chart>
     <hc-tooltip/>
+    <hc-filter/>
   </div>
 </template>
 
@@ -15,14 +16,16 @@
 import HcChart from "./HcChart";
 import HcBars from "./components/HcBars";
 import HcAxis from "./components/scales/HcAxis";
-import HcTooltip from "./components/tools/HcTooltip";
+import HcTooltip from "./components/addons/HcTooltip";
+import HcFilter from "./components/addons/HcFilter";
 export default {
   name: "app",
   components: {
     HcChart,
     HcBars,
     HcAxis,
-    HcTooltip
+    HcTooltip,
+    HcFilter
   },
   data() {
     return {
