@@ -16,7 +16,6 @@
 <script>
 import computeScales from "./lib/scales";
 import HcDummyFilter from "./components/addons/dummy/HcDummyFilter"
-import bus from "./lib/bus"
 export default {
   name: "HcChart",
   components: {
@@ -76,7 +75,8 @@ export default {
       },
       tooltip: {
         enumerable: true,
-        set: (tooltip) => { tooltip && bus.$emit('tooltip-show', tooltip) || bus.$emit('tooltip-hide')}
+        get: () => this.tooltip,
+        set: (tooltip) => { this.tooltip = tooltip }
       }
     });
     return { chart: this.chart };
@@ -144,7 +144,6 @@ export default {
     };
   },
   created() {
-    this.chart.data = this.pipeline(this.data)
     this.chart.unfiltredData = this.pipeline(this.data)
   },
   mounted() {

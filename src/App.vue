@@ -9,8 +9,10 @@
       <template v-slot:HcFilter>
         <hc-filter/>
       </template>
+      <template v-slot:HcTooltip>
+        <hc-tooltip/>
+      </template>
     </hc-chart>
-    <hc-tooltip/>
   </div>
 </template>
 

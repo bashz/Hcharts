@@ -38,16 +38,14 @@ export default {
       d.isActive = true
       return d
     })
+    this.dataIds = this.data.map(d => d.id);
     this.setData()
   },
   watch: {
     "chart.unfiltredData" (newData) {
       this.data = newData.map(d => {
         const index = this.dataIds.indexOf(d.id);
-        if (~index) {
-          return this.data[index];
-        }
-        d.isActive = true;
+        d.isActive = ~index ? this.data[index].isActive : true
         return d;
       });
       this.dataIds = this.data.map(d => d.id);
