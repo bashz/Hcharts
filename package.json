@@ -1,11 +1,15 @@
 {
   "name": "hexachart",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:lib": "vue-cli-service build --target lib --name hexachart ./index.js",
+    "build:inline-lib": "vue-cli-service build --target lib --name hexachart --inline-vue ./index.js",
+    "build:recipes": "vue-cli-service build --target lib --name hcRecipes ./recipes.js",
+    "build:wp": "vue-cli-service build --target wc-async --name hexachart 'src/recipes/**/*.vue'"
   },
   "dependencies": {
     "core-js": "^3.4.4",

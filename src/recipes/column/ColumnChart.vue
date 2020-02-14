@@ -1,8 +1,8 @@
 <template>
   <hc-chart :data="data" :scales="scales" :offset="offset" :colors="colors" :animation="animation">
-    <hc-bars x="linear" y="band" />
-    <hc-axis position="bottom" scale="linear" />
-    <hc-axis position="left" scale="band" />
+    <hc-bars x="band" y="linear" />
+    <hc-axis position="bottom" scale="band" />
+    <hc-axis position="left" scale="linear" />
     <template v-slot:HcFilter>
       <hc-filter />
     </template>
@@ -13,13 +13,13 @@
 </template>
 
 <script>
-import HcChart from "../HcChart";
-import HcBars from "../components/HcBars";
-import HcAxis from "../components/scales/HcAxis";
-import HcFilter from "../components/addons/HcFilter";
-import HcTooltip from "../components/addons/HcTooltip";
+import HcChart from "../../HcChart";
+import HcBars from "../../components/HcBars";
+import HcAxis from "../../components/scales/HcAxis";
+import HcFilter from "../../components/addons/HcFilter";
+import HcTooltip from "../../components/addons/HcTooltip";
 export default {
-  name: "HcBarChart",
+  name: "ColumnChart",
   components: {
     HcChart,
     HcBars,
@@ -46,17 +46,17 @@ export default {
       scales: {
         band: {
           type: "band",
-          orientation: "vertical"
+          orientation: "horizontal"
         },
         linear: {
           type: "linear",
-          orientation: "horizontal",
+          orientation: "vertical",
           nice: 2,
           marginMin: 5
         }
       },
       offset: {
-        left: 100,
+        left: 60,
         bottom: 30,
         right: 20,
         top: 30
