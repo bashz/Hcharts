@@ -3,7 +3,7 @@ import definition from '../definitions/linear'
 import { scaleLinear } from "d3-scale";
 
 const computeLinear = (config, data, width = 800, height = 600) => {
-  const scale = Object.assign(definition, config)
+  const scale = Object.assign({}, definition, config)
   let scaleFunction = scaleLinear()
   if (scale.domain.length) {
     scaleFunction = scaleFunction.domain(scale.domain)
@@ -26,7 +26,7 @@ const computeLinear = (config, data, width = 800, height = 600) => {
   if (scale.nice) {
     scaleFunction = scaleFunction.nice(scale.nice)
   }
-  scaleFunction.definition = scale
+  scaleFunction.definition = Object.assign({}, scale)
   return scaleFunction
 }
 

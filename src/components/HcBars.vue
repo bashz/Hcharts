@@ -1,5 +1,5 @@
 <template>
-  <g>
+  <g class="hc-bars">
     <hc-bar v-for="value in output" :key="value.id" :value="value" />
   </g>
 </template>

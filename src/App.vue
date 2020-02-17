@@ -8,9 +8,10 @@
       :animation="animation"
     >
       <hc-bars x="band" y="linear" />
+      <hc-points x="band" y="lines" />
       <hc-axis position="bottom" scale="band" />
       <hc-axis position="right" scale="linear" />
-      <hc-axis :position="position" scale="linear" />
+      <hc-axis position="left" scale="lines" />
       <!-- <hc-axis position="top" scale="band"/> -->
       <template v-slot:HcFilter>
         <hc-filter />
@@ -28,6 +29,7 @@
 <script>
 import HcChart from "./HcChart";
 import HcBars from "./components/HcBars";
+import HcPoints from "./components/HcPoints";
 import HcAxis from "./components/scales/HcAxis";
 import HcFilter from "./components/addons/HcFilter";
 import HcLegend from "./components/addons/HcLegend";
@@ -37,6 +39,7 @@ export default {
   components: {
     HcChart,
     HcBars,
+    HcPoints,
     HcAxis,
     HcFilter,
     HcLegend,
@@ -46,9 +49,9 @@ export default {
     return {
       position: "top",
       data: [
-        { value: -89, name: "alpha", id: "2" },
-        { value: 45, name: "beta", id: "3" },
-        { value: 29, name: "delta", id: "4" }
+        { value: -89, name: "alpha", id: "2", v: -9  },
+        { value: 45, name: "beta", id: "3", v: 5  },
+        { value: 29, name: "delta", id: "4", v: 3  }
       ],
       scales: {
         band: {
@@ -59,6 +62,12 @@ export default {
           type: "linear",
           orientation: "vertical",
           nice: 4
+        },
+        lines: {
+          type: "linear",
+          orientation: "vertical",
+          nice: 4,
+          discriminator: "v"
         }
       },
       offset: {
@@ -77,19 +86,19 @@ export default {
   mounted() {
     setTimeout(() => {
       this.data = [
-        { value: 29, name: "alpha", id: "2" },
-        { value: 45, name: "beta", id: "3" },
-        { value: -29, name: "delta", id: "4" }
+        { value: 29, name: "alpha", id: "2", v: 3 },
+        { value: 45, name: "beta", id: "3", v: 5  },
+        { value: -29, name: "delta", id: "4", v: -3  }
       ];
     }, 1100);
     setTimeout(() => {
-      this.data.push({ value: 29, name: "charlie", id: "5" });
+      this.data.push({ value: 29, name: "charlie", id: "5", v: 3  });
     }, 2200);
     setTimeout(() => {
       this.data[3].value = 60;
     }, 3300);
     setTimeout(() => {
-      this.data.unshift({ value: 29, name: "zeta", id: "1" });
+      this.data.unshift({ value: 29, name: "zeta", id: "1", v: 3000 });
     }, 4400);
     setTimeout(() => {
       this.position = "left";
