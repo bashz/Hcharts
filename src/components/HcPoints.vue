@@ -1,7 +1,9 @@
 <template>
   <g class="hc-points">
-    <hc-line :value="output" />
-    <hc-point v-for="value in output" :key="value.id" :value="value" />
+    <slot :output="output">
+      <hc-line :value="output" />
+      <hc-point v-for="value in output" :key="value.id" :value="value" />
+    </slot>
   </g>
 </template>
 

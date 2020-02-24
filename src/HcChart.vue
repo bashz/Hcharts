@@ -181,6 +181,10 @@ export default {
       }
     },
     pipeline(data, force = false) {
+      const hasGroup = data.some(d => d.group)
+      if (hasGroup) {
+        // Get Chroma scale
+      }
       return data.map((d, index) => {
         d.color =
           (!force && d.color) ||

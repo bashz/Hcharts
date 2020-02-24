@@ -8,7 +8,11 @@
       :animation="animation"
     >
       <hc-bars x="band" y="linear" />
-      <hc-points x="band" y="lines" />
+      <hc-points x="band" y="lines">
+        <template v-slot="points">
+          <hc-point v-for="point in points.output" :r="10" :key="point.id" :value="point"/>
+        </template>
+      </hc-points>
       <hc-axis position="bottom" scale="band" />
       <hc-axis position="right" scale="linear" />
       <hc-axis position="left" scale="lines" />
@@ -34,6 +38,7 @@ import HcAxis from "./components/scales/HcAxis";
 import HcFilter from "./components/addons/HcFilter";
 import HcLegend from "./components/addons/HcLegend";
 import HcTooltip from "./components/addons/HcTooltip";
+import HcPoint from "./components/shapes/HcPoint"
 export default {
   name: "app",
   components: {
@@ -43,7 +48,8 @@ export default {
     HcAxis,
     HcFilter,
     HcLegend,
-    HcTooltip
+    HcTooltip,
+    HcPoint
   },
   data() {
     return {
@@ -98,7 +104,7 @@ export default {
       this.data[3].value = 60;
     }, 3300);
     setTimeout(() => {
-      this.data.unshift({ value: 29, name: "zeta", id: "1", v: 3000 });
+      this.data.unshift({ value: 29, name: "zeta", id: "1", v: 7 });
     }, 4400);
     setTimeout(() => {
       this.position = "left";
@@ -111,8 +117,12 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .hc-svg {
   background-color: #dfe5f0;
+}
+.hc-point {
+  stroke: #000;
+  stroke-width: 3;
 }
 </style>

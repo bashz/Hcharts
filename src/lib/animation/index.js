@@ -16,6 +16,7 @@ animate()
 
 const Tween = function (from, to, duration = 1000, onUpdate, delay = 0, easing = (t) => t) {
   this.id = (++i).toString();
+  this.to = to;
   this.interpolation = interpolate(from, to);
   this.duration = duration;
   this.onUpdate = onUpdate;
@@ -27,7 +28,7 @@ Tween.prototype.update = function () {
   (t >= 1 && this.destroy(true)) || t >= 0 && this.onUpdate(this.interpolation(this.easing(t)));
 }
 Tween.prototype.destroy = function (end = false) {
-  end && this.onUpdate(this.interpolation(this.easing(1)));
+  end && this.onUpdate(this.to);
   return delete tweens[this.id];
 }
 

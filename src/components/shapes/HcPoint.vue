@@ -2,8 +2,8 @@
   <circle
     class="hc-point"
     :stroke="animated.color"
-    stroke-width="1"
-    r="5"
+    :fill="animated.color"
+    :r="r"
     :cx="animated.x"
     :cy="animated.y"
     @mousemove="tooltipOn"
@@ -33,6 +33,10 @@ export default {
           value: 0
         };
       }
+    },
+    r: {
+      type: Number,
+      default: 5
     }
   },
   data() {
@@ -81,5 +85,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.hc-point {
+  stroke-width: 1;
+}
 </style>
